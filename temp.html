@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>//vuejsexamples.net</title>
+    <!-- include vue -->
+    <script src="https://unpkg.com/vue"></script>
+    <!-- axios -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.3/axios.min.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      Posts:
+      <li v-for="post of posts">
+      <strong>{{post.storeName}}</strong>
+      {{post.location}}
+      </li>
+    </div>
+  </body>
+  <script type="text/javascript">
+    new Vue({
+        el: '#app',
+        created() {
+            this.fetchData();
+        },
+        data: {
+            posts: []
+        },
+        methods: {
+            fetchData() {
+            axios.get('./data.json').then(response => {
+                this.posts = response.data;
+                });
+            }
+        }
+    });
+  </script>
+</html>
