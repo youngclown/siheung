@@ -12,6 +12,7 @@
     <style>
       td,th {
         border-top: 1px solid #eee;
+        border-right: 1px solid #eee;
         padding: 10px;
       }
       .current {
@@ -44,6 +45,16 @@
     ></list>
   </div>
 
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119881066-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-119881066-1');
+  </script>
+
   <template id="list">
     <div class="list">
       검색 : <input type="text" class="search" v-model="searchKey"/>
@@ -56,11 +67,16 @@
         <tr v-for="row in data | orderBy orderKey | filterBy searchKey | offset offset | limit perpage">
           <td v-for="item in row">{{item}}</td>
         </tr>
+        <tr>
+          <td colspan="4">
+            <span @click="setPage(currentPageIndex-1)">Prev</span>
+            <span v-for="i in pages" @click="setPage(i)" v-bind:class="{'current':currentPageIndex === i}"  style="cursor:pointer"> {{i+1}} </span>
+            <span @click="setPage(currentPageIndex+1)">Next</span></td>
+        </tr>
       </table>
+      <br/>
+      <br/>
 
-      <span @click="setPage(currentPageIndex-1)">Prev</span>
-      <span v-for="i in pages" @click="setPage(i)" v-bind:class="{'current':currentPageIndex === i}"> {{i+1}} </span>
-      <span @click="setPage(currentPageIndex+1)">Next</span>
     </div>
   </template>
 
@@ -139,5 +155,6 @@
 
             });
   </script>
+  <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
   </body>
 </html>
