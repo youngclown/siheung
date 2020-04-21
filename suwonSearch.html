@@ -46,7 +46,9 @@
 
   <template id="list">
     <div class="list">
-      <input type="text" class="search" v-model="searchKey"/>
+      검색 : <input type="text" class="search" v-model="searchKey"/>
+      <br/>
+      <br/>
       <table>
         <tr>
           <th v-for="column in columns">{{column.label}}</th>
@@ -129,7 +131,7 @@
               },
               methods: {
                 fetchData() {
-                  axios.get('./siheungData.json').then(response => {
+                  axios.get('./suwonData.json').then(response => {
                     this.data1 = response.data;
                   });
                 }
