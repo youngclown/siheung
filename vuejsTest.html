@@ -33,12 +33,12 @@
                     'key': 'storeName'
                   },
                   {
-                    'label': '카테고리',
-                    'key': 'category'
-                  },
-                  {
                     'label': '전화',
                     'key': 'telephone'
+                  },
+                  {
+                    'label': '카테고리',
+                    'key': 'category'
                   }]"
             :perpage="54"
     ></list>
@@ -57,7 +57,7 @@
       </table>
 
       <span @click="setPage(currentPageIndex-1)">Prev</span>
-      <span v-for="i in pages" @click="setPage(i)" v-bind:class="{'current':currentPageIndex === i}">{{i+1}}</span>
+      <span v-for="i in pages" @click="setPage(i)" v-bind:class="{'current':currentPageIndex === i}"> {{i+1}} </span>
       <span @click="setPage(currentPageIndex+1)">Next</span>
     </div>
   </template>
