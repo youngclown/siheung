@@ -18,6 +18,25 @@
     </style>
   </head>
   <body>
+
+  <template id="list">
+    <div class="list">
+      <input type="text" class="search" v-model="searchKey"/>
+      <table>
+        <tr>
+          <th v-for="column in columns">{{column.label}}</th>
+        </tr>
+        <tr v-for="row in data | orderBy orderKey | filterBy searchKey | offset offset | limit perpage">
+          <td v-for="item in row">{{item}}</td>
+        </tr>
+      </table>
+
+      <span @click="setPage(currentPageIndex-1)">Prev</span>
+      <span v-for="i in pages" @click="setPage(i)" v-bind:class="{'current':currentPageIndex === i}">{{i+1}}</span>
+      <span @click="setPage(currentPageIndex+1)">Next</span>
+    </div>
+  </template>
+
   <div id="app">
     <list
             :data="[
@@ -62,23 +81,6 @@
             :perpage="3"
     ></list>
   </div>
-  <template id="list">
-    <div class="list">
-      <input type="text" class="search" v-model="searchKey"/>
-      <table>
-        <tr>
-          <th v-for="column in columns">{{column.label}}</th>
-        </tr>
-        <tr v-for="row in data | orderBy orderKey | filterBy searchKey | offset offset | limit perpage">
-          <td v-for="item in row">{{item}}</td>
-        </tr>
-      </table>
-
-      <span @click="setPage(currentPageIndex-1)">Prev</span>
-      <span v-for="i in pages" @click="setPage(i)" v-bind:class="{'current':currentPageIndex === i}">{{i+1}}</span>
-      <span @click="setPage(currentPageIndex+1)">Next</span>
-    </div>
-  </template>
 
 
   <script type="text/javascript">
