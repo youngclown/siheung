@@ -46,7 +46,8 @@
 
   <template id="list">
     <div class="list">
-      <input type="text" class="search" v-model="searchKey"/>
+      검색 : <input type="text" class="search" v-model="searchKey"/>
+      <br/>
       <table>
         <tr>
           <th v-for="column in columns">{{column.label}}</th>
