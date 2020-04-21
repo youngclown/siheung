@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>//vuejsexamples.net</title>
+    <!-- include vue -->
+    <script src="https://unpkg.com/vue"></script>
+    <!-- axios -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.3/axios.min.js"></script>
+    <style>
+      td,th {
+        border: 1px solid #eee;
+        padding: 10px;
+      }
+      .current {
+        background: tomato;
+      }
+    </style>
+  </head>
+  <body>
+  <div id="app">
+    <list
+            :data="[
+                 {
+                   'name': 'Jean',
+                   'age': 28,
+                   'length': 180
+                 },
+                 {
+                   'name': 'Salomon',
+                   'age': 27,
+                   'length': 150
+                 },
+                 {
+                   'name': 'Haidi',
+                   'age': 29,
+                   'length': 157.5
+                 },
+                 {
+                   'name': 'George',
+                   'age': 25,
+                   'length': 190
+                 },
+                 {
+                   'name': 'John',
+                   'age': 21,
+                   'length': 176
+                 }
+               ]"
+            :columns="[{
+                    'label': 'Name',
+                    'key': 'name'
+                  },
+                  {
+                    'label': 'Age',
+                    'key': 'age'
+                  },
+                  {
+                    'label': 'Length',
+                    'key': 'length'
+                  }]"
+            :perpage="3"
+    ></list>
+  </div>
+
+  <template id="list">
+    <div class="list">
+      <input type="text" class="search" v-model="searchKey"/>
+      <table>
+        <tr>
+          <th v-for="column in columns">{{column.label}}</th>
+        </tr>
+        <tr v-for="row in data | orderBy orderKey | filterBy searchKey | offset offset | limit perpage">
+          <td v-for="item in row">{{item}}</td>
+        </tr>
+      </table>
+
+      <span @click="setPage(currentPageIndex-1)">Prev</span>
+      <span v-for="i in pages" @click="setPage(i)" v-bind:class="{'current':currentPageIndex === i}">{{i+1}}</span>
+      <span @click="setPage(currentPageIndex+1)">Next</span>
+    </div>
+  </template>
+  </body>
+  <script type="text/javascript">
+    Vue.component('list', Vue.extend({
+
+      template: '#list',
+
+      props: ['data', 'columns', 'perpage'],
+
+      data: function() {
+        return {
+          searchKey: '',
+          currentPageIndex: 0,
+          orderKey: 'age'
+        }
+      },
+
+      methods: {
+        setPage: function(index) {
+          if (index >= 0 && index < this.pages) {
+            this.currentPageIndex = index;
+          }
+        }
+      },
+
+      computed: {
+        pages: function() {
+          var filterBy = this.$options.filters.filterBy;
+          var filteredData = filterBy(this.data, this.searchKey);
+          return Math.ceil(filteredData.length / this.perpage);
+        },
+        offset: function() {
+          console.log(this.currentPageIndex, this.perpage);
+          return this.currentPageIndex * this.perpage;
+        }
+      },
+
+      watch: {
+        searchKey: function() {
+          if (this.currentPageIndex + 1 > this.pages)
+            this.currentPageIndex = this.pages - 1;
+        }
+      },
+
+      ready: function() {
+
+      }
+
+    }));
+
+    Vue.filter('limit', function (arr, limit) {
+      if ( ! Array.isArray(arr)) return false;
+      return arr.slice(0, limit);
+    })
+
+    Vue.filter('offset', function (arr, offset) {
+      if ( ! Array.isArray(arr)) return false;
+      return arr.slice(offset, arr.length)
+    });
+
+    var app = new Vue({
+      'el': '#app'
+    });
+  </script>
+</html>
