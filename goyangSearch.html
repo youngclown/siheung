@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>//vuejsexamples.net</title>
+    <!-- include vue -->
+    <script src="https://unpkg.com/vue"></script>
+    <!-- axios -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.3/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.21/vue.min.js"></script>
+
+    <style>
+      td,th {
+        border-top: 1px solid #eee;
+        padding: 10px;
+      }
+      .current {
+        background: tomato;
+      }
+    </style>
+  </head>
+  <body>
+
+  <div id="app">
+    <list
+            :data='data1'
+            :columns="[
+                  {
+                    'label': '위치',
+                    'key': 'location'
+                  },{
+                    'label': '상호명',
+                    'key': 'storeName'
+                  },
+                  {
+                    'label': '전화',
+                    'key': 'telephone'
+                  },
+                  {
+                    'label': '카테고리',
+                    'key': 'category'
+                  }]"
+            :perpage="50"
+    ></list>
+  </div>
+
+  <template id="list">
+    <div class="list">
+      검색 : <input type="text" class="search" v-model="searchKey"/>
+      <br/>
+      <br/>
+      <table>
+        <tr>
+          <th v-for="column in columns">{{column.label}}</th>
+        </tr>
+        <tr v-for="row in data | orderBy orderKey | filterBy searchKey | offset offset | limit perpage">
+          <td v-for="item in row">{{item}}</td>
+        </tr>
+      </table>
+
+      <span @click="setPage(currentPageIndex-1)">Prev</span>
+      <span v-for="i in pages" @click="setPage(i)" v-bind:class="{'current':currentPageIndex === i}"> {{i+1}} </span>
+      <span @click="setPage(currentPageIndex+1)">Next</span>
+    </div>
+  </template>
+
+
+  <script type="text/javascript">
+
+    Vue.component('list', Vue.extend({
+      template: '#list',
+      props: ['data', 'columns', 'perpage'],
+      data: function() {
+        return {
+          searchKey: '',
+          currentPageIndex: 0,
+          orderKey: 'storeName'
+        }
+      },
+      methods: {
+        setPage: function(index) {
+          if (index >= 0 && index < this.pages) {
+            this.currentPageIndex = index;
+          }
+        }
+      },
+
+      computed: {
+        pages: function() {
+          var filterBy = this.$options.filters.filterBy;
+          var filteredData = filterBy(this.data, this.searchKey);
+          return Math.ceil(filteredData.length / this.perpage);
+        },
+        offset: function() {
+          console.log(this.currentPageIndex, this.perpage);
+          return this.currentPageIndex * this.perpage;
+        }
+      },
+
+      watch: {
+        searchKey: function() {
+          if (this.currentPageIndex + 1 > this.pages)
+            this.currentPageIndex = this.pages - 1;
+        }
+      },
+
+      ready: function() {
+
+      }
+
+    }));
+
+    Vue.filter('limit', function (arr, limit) {
+      if ( ! Array.isArray(arr)) return false;
+      return arr.slice(0, limit);
+    })
+
+    Vue.filter('offset', function (arr, offset) {
+      if ( ! Array.isArray(arr)) return false;
+      return arr.slice(offset, arr.length)
+    });
+
+    var app =
+            new Vue({
+              el: '#app',
+              created() {
+                this.fetchData();
+              },
+              data: {
+                data1: []
+              },
+              methods: {
+                fetchData() {
+                  axios.get('./goyangData.json').then(response => {
+                    this.data1 = response.data;
+                  });
+                }
+              }
+
+            });
+  </script>
+  </body>
+</html>
