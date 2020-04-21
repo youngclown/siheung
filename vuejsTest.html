@@ -23,7 +23,7 @@
 
   <div id="app">
     <list
-            :data1=''
+            :data='data1'
             :columns="[
                   {
                     'label': '위치',
@@ -67,7 +67,7 @@
 
     Vue.component('list', Vue.extend({
       template: '#list',
-      props: ['data1', 'columns', 'perpage'],
+      props: ['data', 'columns', 'perpage'],
       data: function() {
         return {
           searchKey: '',
