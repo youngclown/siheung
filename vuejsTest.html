@@ -16,69 +16,6 @@
         background: tomato;
       }
     </style>
-
-    <script type="text/javascript">
-      Vue.component('list', Vue.extend({
-
-        template: '#list',
-
-        props: ['data', 'columns', 'perpage'],
-
-        data: function() {
-          return {
-            searchKey: '',
-            currentPageIndex: 0,
-            orderKey: 'age'
-          }
-        },
-
-        methods: {
-          setPage: function(index) {
-            if (index >= 0 && index < this.pages) {
-              this.currentPageIndex = index;
-            }
-          }
-        },
-
-        computed: {
-          pages: function() {
-            var filterBy = this.$options.filters.filterBy;
-            var filteredData = filterBy(this.data, this.searchKey);
-            return Math.ceil(filteredData.length / this.perpage);
-          },
-          offset: function() {
-            console.log(this.currentPageIndex, this.perpage);
-            return this.currentPageIndex * this.perpage;
-          }
-        },
-
-        watch: {
-          searchKey: function() {
-            if (this.currentPageIndex + 1 > this.pages)
-              this.currentPageIndex = this.pages - 1;
-          }
-        },
-
-        ready: function() {
-
-        }
-
-      }));
-
-      Vue.filter('limit', function (arr, limit) {
-        if ( ! Array.isArray(arr)) return false;
-        return arr.slice(0, limit);
-      })
-
-      Vue.filter('offset', function (arr, offset) {
-        if ( ! Array.isArray(arr)) return false;
-        return arr.slice(offset, arr.length)
-      });
-
-      var app = new Vue({
-        'el': '#app'
-      });
-    </script>
   </head>
   <body>
   <div id="app">
@@ -126,6 +63,69 @@
     ></list>
   </div>
 
+
+  <script type="text/javascript">
+    Vue.component('list', Vue.extend({
+
+      template: '#list',
+
+      props: ['data', 'columns', 'perpage'],
+
+      data: function() {
+        return {
+          searchKey: '',
+          currentPageIndex: 0,
+          orderKey: 'age'
+        }
+      },
+
+      methods: {
+        setPage: function(index) {
+          if (index >= 0 && index < this.pages) {
+            this.currentPageIndex = index;
+          }
+        }
+      },
+
+      computed: {
+        pages: function() {
+          var filterBy = this.$options.filters.filterBy;
+          var filteredData = filterBy(this.data, this.searchKey);
+          return Math.ceil(filteredData.length / this.perpage);
+        },
+        offset: function() {
+          console.log(this.currentPageIndex, this.perpage);
+          return this.currentPageIndex * this.perpage;
+        }
+      },
+
+      watch: {
+        searchKey: function() {
+          if (this.currentPageIndex + 1 > this.pages)
+            this.currentPageIndex = this.pages - 1;
+        }
+      },
+
+      ready: function() {
+
+      }
+
+    }));
+
+    Vue.filter('limit', function (arr, limit) {
+      if ( ! Array.isArray(arr)) return false;
+      return arr.slice(0, limit);
+    })
+
+    Vue.filter('offset', function (arr, offset) {
+      if ( ! Array.isArray(arr)) return false;
+      return arr.slice(offset, arr.length)
+    });
+
+    var app = new Vue({
+      'el': '#app'
+    });
+  </script>
   <template id="list">
     <div class="list">
       <input type="text" class="search" v-model="searchKey"/>
